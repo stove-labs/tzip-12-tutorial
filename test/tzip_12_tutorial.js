@@ -1,4 +1,5 @@
 const tzip_12_tutorial = artifacts.require('tzip_12_tutorial');
+const balance_requester = artifacts.require('balance_requester');
 
 const { initial_storage } = require('../migrations/1_deploy_tzip_12_tutorial.js');
 const bigMapKeyNotFound = require('./../helpers/bigMapKeyNotFound.js');
@@ -9,16 +10,20 @@ const { unit } = require('./../helpers/constants');
  */
 const { alice, bob } = require('./../scripts/sandbox/accounts');
 
-contract('multi_asset', accounts => {
+contract('tzip_12_tutorial', accounts => {
     let storage;
     let tzip_12_tutorial_instance;
+    let balance_requester_tutorial_instance;
 
     beforeEach(async () => {
         tzip_12_tutorial_instance = await tzip_12_tutorial.deployed();
+        balance_requester_instance = await balance_requester.deployed();
         /**
          * Display the current contract address for debugging purposes
          */
-        console.log('Contract deployed at:', tzip_12_tutorial_instance.address);
+        console.log('Token contract deployed at:', tzip_12_tutorial_instance.address);
+        console.log('Balance requester contract deployed at:', balance_requester_instance.address);
+
         storage = await tzip_12_tutorial_instance.storage();
     });
 
@@ -62,5 +67,25 @@ contract('multi_asset', accounts => {
         const deployedBalanceBob = await storage.get(bob.pkh);
         const expectedBalanceBob = 1;
         assert.equal(deployedBalanceBob, expectedBalanceBob);
+    });
+
+    it('should return the balance of alice trough the balance_of interface', async () => {
+        const balanceRequests =  [
+            {
+                owner: alice.pkh,
+                token_id: { 'single': unit }
+            }
+        ];
+        const at = tzip_12_tutorial_instance.address;
+
+        await balance_requester_instance.request_balance(
+            at,
+            balanceRequests
+        );
+
+        const balance_requesterStorage = await balance_requester_instance.storage();
+        const deployedBalanceAlice = await storage.get(alice.pkh);
+        const balanceResponse = balance_requesterStorage[0];
+        assert(balanceResponse.balance.isEqualTo(deployedBalanceAlice));
     });
 });

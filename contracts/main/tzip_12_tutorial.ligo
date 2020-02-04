@@ -1,6 +1,7 @@
-#include "../partials/action.ligo"
-#include "../partials/storage.ligo"
-#include "../partials/transfer.ligo"
+#include "../partials/tzip_12_tutorial/action.ligo"
+#include "../partials/tzip_12_tutorial/storage.ligo"
+#include "../partials/tzip_12_tutorial/transfer.ligo"
+#include "../partials/tzip_12_tutorial/balance_of.ligo"
 
 (* Default function that represents our contract, it's sole purpose here is the entrypoint routing *)
 function main (const action : action; var storage : storage) : (list(operation) * storage)
@@ -10,7 +11,7 @@ function main (const action : action; var storage : storage) : (list(operation) 
         The return value of `transfer(...)` is then returned as a result of `main(...)` as well.
      *)
     | Transfer(transfer_param) -> transfer(transfer_param, storage)
-    
+    | Balance_of(balance_of_param) -> balance_of(balance_of_param, storage)
     (* This is just a placeholder *)
     | U -> ((nil : list(operation)), storage)
     end)
