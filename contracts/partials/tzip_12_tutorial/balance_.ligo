@@ -1,10 +1,10 @@
 #include "action.ligo"
 #include "get_with_default_nat.ligo"
 #include "default_balance.ligo"
-#include "balance_of_param.ligo"
+#include "balance_param.ligo"
 
-function balance_of (
-    const balance_of_param : balance_of_param; 
+function balance_ (
+    const balance_param : balance_param; 
     const storage : storage
     ) : (list(operation) * storage)
     is block {
@@ -20,19 +20,19 @@ function balance_of (
                 balance = token_balance
             end;
 
-        const balance_view_param : balance_view_param = list_map(
+        const balance_callback_param : balance_callback_param = list_map(
             balance_request_iterator, 
-            balance_of_param.balance_requests
+            balance_param.requests
         );
 
-        const balance_of_response_operation : operation = transaction(
-            balance_view_param,
+        const balance_response_operation : operation = transaction(
+            balance_callback_param,
             0mutez,
-            balance_of_param.balance_view
+            balance_param.callback
         );
         
         const operations : list(operation) = list
-            balance_of_response_operation
+            balance_response_operation
         end;
 
         skip;

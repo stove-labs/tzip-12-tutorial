@@ -11,9 +11,9 @@ end;
 
 type list_of_balance_responses is list(balance_response);
 type list_of_balance_requests is list(balance_request);
-type balance_view_param is list_of_balance_responses;
-type balance_view_contract is contract(balance_view_param);
-type balance_of_param is record
-    balance_requests : list_of_balance_requests;
-    balance_view : balance_view_contract;
+type balance_callback_param is list_of_balance_responses;
+type balance_callback_contract is contract(balance_callback_param);
+type balance_param is record
+    requests : list_of_balance_requests;
+    callback : balance_callback_contract;
 end;
