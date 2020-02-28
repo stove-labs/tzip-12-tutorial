@@ -1,8 +1,8 @@
-#include "../tzip_12_tutorial/balance_of_param.ligo"
+#include "../tzip_12_tutorial/balance_param.ligo"
 
 type request_balance_param is record
     at : address;
-    balance_requests : list_of_balance_requests;
+    requests : list_of_balance_requests;
 end;
 type receive_balance_param is list_of_balance_responses;
 
