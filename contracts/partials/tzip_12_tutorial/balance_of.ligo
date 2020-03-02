@@ -1,14 +1,15 @@
 #include "action.ligo"
 #include "get_with_default_nat.ligo"
 #include "default_balance.ligo"
-#include "balance_param.ligo"
+#include "balance_of_param.ligo"
 
-function balance_ (
-    const balance_param : balance_param; 
+function balance_of (
+    const balance_of_param : balance_of_param; 
     const storage : storage
     ) : (list(operation) * storage)
     is block {
 
+        (* Find balances for all the requested token_id and token_owner combinations *)
         function balance_request_iterator (const balance_request : balance_request) : balance_response
             is block {
                 const token_balance : token_balance = get_with_default_nat(
@@ -20,19 +21,23 @@ function balance_ (
                 balance = token_balance
             end;
 
-        const balance_callback_param : balance_callback_param = list_map(
+        const balance_of_callback_param : balance_of_callback_param = list_map(
             balance_request_iterator, 
-            balance_param.requests
+            balance_of_param.requests
         );
 
-        const balance_response_operation : operation = transaction(
-            balance_callback_param,
+        (* 
+            Forge an internal transaction to the callback contract,
+            sending back the processed map of balance requests/responses
+        *)
+        const balance_of_response_operation : operation = transaction(
+            balance_of_callback_param,
             0mutez,
-            balance_param.callback
+            balance_of_param.callback
         );
         
         const operations : list(operation) = list
-            balance_response_operation
+            balance_of_response_operation
         end;
 
         skip;

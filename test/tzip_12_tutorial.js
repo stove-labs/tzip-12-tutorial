@@ -115,7 +115,7 @@ contract('tzip_12_tutorial', accounts => {
         }
     });
 
-    it('should return the balance of alice trough the balance interface', async () => {
+    it('should return the balance of alice trough the balance_of interface', async () => {
         const balanceRequests =  [
             {
                 owner: alice.pkh,
