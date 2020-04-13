@@ -1,4 +1,3 @@
-#include "action.ligo"
 #include "get_with_default_nat.ligo"
 #include "default_balance.ligo"
 #include "balance_of_param.ligo"
